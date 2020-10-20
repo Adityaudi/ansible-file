@@ -67,9 +67,7 @@ pipeline {
         stage('Deploy on live production') {
             when {
                 expression {
-                    BRANCH_NAME == 'production'
-                    PRODUCTION_DEPLOY == 'OKE!'
-                    params.RUNNOW
+                    BRANCH_NAME == 'production' || PRODUCTION_DEPLOY == 'OKE!' || params.RUNNOW
                 }
             }
             steps {
