@@ -9,8 +9,8 @@ RUN npm run build
 FROM nginx:stable-alpine as production-stage
 COPY nginx.conf /etc/nginx/nginx.conf
 
-COPY cert.key /etc/ssl/certs/cert.pem
-COPY cert.pem /etc/ssl/private/cert.key 
+COPY ssl/cert.pem /etc/ssl/certs/cert.pem
+COPY ssl/cert.key /etc/ssl/private/cert.key 
 
 COPY --from=build-stage /app/dist /dist/
 
