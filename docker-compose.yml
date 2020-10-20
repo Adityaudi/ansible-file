@@ -23,7 +23,7 @@ services:
         networks:
             - networkid
         environment:
-            - PORT=4040
+            - PORT=9090
 
             - DB_NAME=coffeeshop
             - DB_USER=adityaudi
