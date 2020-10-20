@@ -3,7 +3,7 @@ version: "3.3"
 services: 
     frontend: 
         container_name: frontend
-        image: adityaudi/app-frontend:v2.0.0.1
+        image: adityaudi/app-frontend:stage
         ports: 
             - "80:80"
             - "443:443"
@@ -17,7 +17,7 @@ services:
 
     nodejs:
         container_name: nodejs
-        image: adityaudi/app-backend:v1.0.0.2
+        image: adityaudi/app-backend:stage
         ports:
             - "9090:4040"
         networks:
