@@ -8,50 +8,28 @@ pipeline {
     }
     
     parameters { 
-        choice(name: 'BUILD', choices: ['NOT OKE!', 'OKE!'])
-        choice(name: 'DEVELOPMENT', choices: ['NOT OKE!', 'OKE'])
+        choice(name: 'PRODUCTION_DEPLOY', choices: ['NOT OKE!', 'OKE'])
         text(name: 'Description', defaultValue: '')
-        booleanParam(name: 'RUNBUILD', defaultValue: false, description: 'YES,IM AGREE!')
+        booleanParam(name: 'RUNNOW', defaultValue: false, description: 'YES,IM AGREE!')
     }
 
-    stages{
-        stage('BUILD') {
-            steps {
-                nodejs('nodejs12') {
-                    sh 'yarn install'
-                }
-            }
-        }
-        
-        stage('TEST FRONTEND') {
-            steps {
-               echo "Testing passed!"
-            }
-        }
-
-        stage("PULL FRONTEND"){
+    stages {
+        stage('Deploy on Deployment') {
             when {
                 expression {
-                    params.RUNBUILD
+                    BRANCH_NAME == 'developement'
                 }
             }
             steps {
-                echo 'Pull image frontend - process.'
                 script {
-                    if (BRANCH_NAME == 'master' || params.BUILD == 'OKE') {
-                        server = 'Build testing CI'
-                    } else if (params.DEVELOPMENT == 'OKE') {
-                        server = 'Build testing CICD'
-                    }
-                    
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: server,
+                                configName: 'ansible',
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: 'docker pull adityaudi/app-frontend:v1.0.0.1; docker pull adityaudi/sup-frontend:v1.0.0.1;',
+                                        execCommand: 'cd /etc/ansible && ansible-playbook -i hosts setup-dev.yml',
                                         execTimeout: 120000,
                                     )
                                 ]
@@ -59,39 +37,24 @@ pipeline {
                         ]
                     )
                 }
-                echo 'Pull image frontend - success.'
             }
         }
-
-        stage('TEST BACKEND') {
-            steps {
-               echo "Testing passed!"
-            }
-        }
-
-        stage("PULL BACKEND"){
+        stage('Deploy on stagging') {
             when {
                 expression {
-                    params.RUNBUILD
+                    BRANCH_NAME == 'master'
                 }
             }
             steps {
-                echo 'Pull image backend - process.'
                 script {
-                    if (BRANCH_NAME == 'master' || params.BUILD == 'OKE') {
-                        server = 'Build testing CI'
-                    } else if (params.DEVELOPMENT == 'OKE') {
-                        server = 'Build testing CICD'
-                    }
-
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: "${server}",
+                                configName: 'ansible',
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: 'docker pull adityaudi/app-backend:v1.0.0.2;',
+                                        execCommand: 'cd /etc/ansible && ansible-playbook -i hosts setup-stage.yml',
                                         execTimeout: 120000,
                                     )
                                 ]
@@ -99,35 +62,26 @@ pipeline {
                         ]
                     )
                 }
-                echo 'Pull image frontend - success.'
             }
         }
-
-        stage("RUNNING"){
+        stage('Deploy on live production') {
             when {
                 expression {
-                    params.RUNBUILD
+                    BRANCH_NAME == 'production'
+                    PRODUCTION_DEPLOY == 'OKE!'
+                    params.RUNNOW
                 }
             }
             steps {
-                echo 'Docker compose - running.'
                 script {
-                    if (params.BUILD == 'OKE') {
-                        if (BRANCH_NAME == 'master'){
-                            server = 'Build testing CI'
-                        }
-                    } else {
-                        server = 'Build testing CICD'
-                    }
-                    
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: "${server}",
+                                configName: 'ansible',
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: 'cd coffeeshop-jenkinsCICD && docker-compose up -d; docker ps',
+                                        execCommand: 'cd ansible && ansible-playbook -i hosts setup-prod.yml',
                                         execTimeout: 120000,
                                     )
                                 ]
@@ -135,7 +89,6 @@ pipeline {
                         ]
                     )
                 }
-                echo 'Docker compose - Success.'
             }
         }
     }    
