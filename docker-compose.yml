@@ -3,7 +3,7 @@ version: "3.3"
 services: 
     frontend: 
         container_name: frontend
-        image: adityaudi/app-frontend:developement
+        image: adityaudi/frontend-coffeeshop:developement
         ports: 
             - "80:80"
             - "443:443"
@@ -17,7 +17,7 @@ services:
 
     nodejs:
         container_name: nodejs
-        image: adityaudi/app-backend:developement
+        image: adityaudi/backend-coffeeshop:developement
         ports:
             - "9090:4040"
         networks:
