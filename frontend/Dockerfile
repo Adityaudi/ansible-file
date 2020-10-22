@@ -8,6 +8,7 @@ RUN npm run build
 # production stage
 FROM nginx:stable-alpine as production-stage
 COPY nginx.conf /etc/nginx/nginx.conf
+ENV VUE_APP_URL='http://nodejs'
 
 COPY --from=build-stage /app/dist /dist/
 
