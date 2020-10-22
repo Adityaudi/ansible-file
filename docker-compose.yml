@@ -3,7 +3,7 @@ version: "3.3"
 services: 
     frontend: 
         container_name: frontend
-        image: adityaudi/app-frontend:v2.0.0.1
+        image: adityaudi/app-frontend:developement
         ports: 
             - "80:80"
             - "443:443"
@@ -17,23 +17,23 @@ services:
 
     nodejs:
         container_name: nodejs
-        image: adityaudi/app-backend:v1.0.0.2
+        image: adityaudi/app-backend:developement
         ports:
             - "9090:4040"
         networks:
             - networkid
         environment:
-            - PORT=4040
+            - PORT=9090
 
             - DB_NAME=coffeeshop
             - DB_USER=adityaudi
             - DB_PASS=22
-            - DB_HOST=database
+            - DB_HOST=3.92.189.20
 
             - SECRET_KEY=adityaudi
 
             - REDIS_PORT=6379
-            - REDIS_HOST=cache
+            - REDIS_HOST=3.92.189.20
 
 networks:
     networkid:
