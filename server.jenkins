@@ -8,7 +8,7 @@ pipeline {
     }
     
     parameters { 
-        choice(name: 'PRODUCTION', choices: ['YES DEV TO PRODUCTION!', 'NO!'])
+        choice(name: 'PRODUCTION', choices: ['NO!', 'YES DEV TO PRODUCTION!'])
         text(name: 'DESCRIPTION', defaultValue: '-')
         booleanParam(name: 'RUNNOW', defaultValue: false, description: 'Yes, Develop now!')
     }
