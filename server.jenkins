@@ -8,7 +8,7 @@ pipeline {
     }
     
     parameters { 
-        choice(name: 'PRODUCTION', choices: ['NO!', 'YES DEV TO PRODUCTION!'])
+        choice(name: 'PRODUCTION', choices: ['YES DEV TO PRODUCTION!', 'NO!'])
         text(name: 'DESCRIPTION', defaultValue: '-')
         booleanParam(name: 'RUNNOW', defaultValue: false, description: 'Yes, Develop now!')
     }
@@ -72,21 +72,23 @@ pipeline {
             }
             steps {
                 script {
-                    if (params.RUNNOW ){
-                        sshPublisher(
-                            publishers: [
-                                sshPublisherDesc(
-                                    configName: 'ansible-control',
-                                    verbose: false,
-                                    transfers: [
-                                        sshTransfer(
-                                            execCommand: 'cd /etc/ansible && ansible-playbook -i hosts setup-prod.yml',
-                                            execTimeout: 120000,
-                                        )
-                                    ]
-                                )
-                            ]
-                        )
+                    if (PRODUCTION == 'YES DEV TO PRODUCTION!'){
+                        if (params.RUNNOW) {
+                            sshPublisher(
+                                publishers: [
+                                    sshPublisherDesc(
+                                        configName: 'ansible-control',
+                                        verbose: false,
+                                        transfers: [
+                                            sshTransfer(
+                                                execCommand: 'cd /etc/ansible && ansible-playbook -i hosts setup-prod.yml',
+                                                execTimeout: 120000,
+                                            )
+                                        ]
+                                    )
+                                ]
+                            )
+                        }
                     }else {
                         echo 'develop to production is failed. please try again!'
                     }
