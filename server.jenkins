@@ -8,9 +8,9 @@ pipeline {
     }
     
     parameters { 
-        choice(name: 'PRODUCTION_DEPLOY', choices: ['NOT OKE!', 'OKE'])
-        text(name: 'Description', defaultValue: '')
-        booleanParam(name: 'RUNNOW', defaultValue: false, description: 'YES,IM AGREE!')
+        choice(name: 'PRODUCTION', choices: ['YES DEV TO PRODUCTION!', 'NO!'])
+        text(name: 'DESCRIPTION', defaultValue: '-')
+        booleanParam(name: 'RUNNOW', defaultValue: false, description: 'Yes, Develop now!')
     }
 
     stages {
@@ -25,7 +25,7 @@ pipeline {
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: 'ansible',
+                                configName: 'ansible-control',
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
@@ -50,7 +50,7 @@ pipeline {
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: 'ansible',
+                                configName: 'ansible-control',
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
@@ -68,28 +68,30 @@ pipeline {
             when {
                 expression {
                     BRANCH_NAME == 'production'
-                    PRODUCTION_DEPLOY == 'OKE!'
-                    params.RUNNOW
                 }
             }
             steps {
                 script {
-                    sshPublisher(
-                        publishers: [
-                            sshPublisherDesc(
-                                configName: 'ansible',
-                                verbose: false,
-                                transfers: [
-                                    sshTransfer(
-                                        execCommand: 'cd ansible && ansible-playbook -i hosts setup-prod.yml',
-                                        execTimeout: 120000,
-                                    )
-                                ]
-                            )
-                        ]
-                    )
+                    if (PRODUCTION == 'YES DEV TO PRODUCTION!' || params.RUNNOW ){
+                        sshPublisher(
+                            publishers: [
+                                sshPublisherDesc(
+                                    configName: 'ansible-control',
+                                    verbose: false,
+                                    transfers: [
+                                        sshTransfer(
+                                            execCommand: 'cd /etc/ansible && ansible-playbook -i hosts setup-prod.yml',
+                                            execTimeout: 120000,
+                                        )
+                                    ]
+                                )
+                            ]
+                        )
+                    }else {
+                        echo 'develop to production is failed. please try again!'
+                    }
                 }
             }
         }
     }    
-}
+}   
