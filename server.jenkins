@@ -88,6 +88,8 @@ pipeline {
                                     )
                                 ]
                             )
+                        }else {
+                            echo 'develop to production is failed. please try again!'
                         }
                     }else {
                         echo 'develop to production is failed. please try again!'
