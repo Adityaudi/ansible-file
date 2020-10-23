@@ -72,7 +72,7 @@ pipeline {
             }
             steps {
                 script {
-                    if (RUNNOW.value == true ){
+                    if (params.RUNNOW ){
                         sshPublisher(
                             publishers: [
                                 sshPublisherDesc(
