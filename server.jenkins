@@ -8,8 +8,8 @@ pipeline {
     }
     
     parameters { 
-        echo PRODUCTION AUTHENTICATION.
-        echo please check all the features to be able to do the production job! following the link = 'https://demo.adityaudi.my.id/'
+        echo 'PRODUCTION AUTHENTICATION'.
+        echo 'please check all the features to be able to do the production job! following the link = 'https://demo.adityaudi.my.id/''
         choice(name: 'PRODUCTION AUTHENTHENTICATION', choices: ['NOT OKE!', 'OKE'])
         text(name: 'Description', defaultValue: '')
         booleanParam(name: 'RUNNOW', defaultValue: false, description: 'YES,IM AGREE!')
