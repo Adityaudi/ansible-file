@@ -29,7 +29,7 @@ pipeline {
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: 'cd /etc/ansible && ansible-playbook -i hosts setup-dev.yml',
+                                        execCommand: 'cd /etc/ansible && ansible -i hosts all -m ping',
                                         execTimeout: 120000,
                                     )
                                 ]
