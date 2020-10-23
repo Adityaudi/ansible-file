@@ -39,6 +39,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Deploy on stagging') {
             when {
                 expression {
@@ -64,7 +65,8 @@ pipeline {
                 }
             }
         }
-        stage('Deploy on live production') {
+        
+       stage('Deploy on live production') {
             when {
                 expression {
                     BRANCH_NAME == 'production'
