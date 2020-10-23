@@ -8,8 +8,7 @@ pipeline {
     }
     
     parameters { 
-        password(name: 'PASSWORD', description: 'Develop to production password auth')
-        choice(name: 'AUTHENTICATION', choices: ['YES DEV TO PRODUCTION!', 'NO!'])
+        choice(name: 'PRODUCTION', choices: ['YES DEV TO PRODUCTION!', 'NO!'])
         text(name: 'DESCRIPTION', defaultValue: '-')
         booleanParam(name: 'RUNNOW', defaultValue: false, description: 'Yes, Develop now!')
     }
@@ -30,7 +29,7 @@ pipeline {
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: 'cd /etc/ansible && ansible -i hosts all -m ping',
+                                        execCommand: 'cd /etc/ansible && ansible-playbook -i hosts setup-dev.yml',
                                         execTimeout: 120000,
                                     )
                                 ]
@@ -73,20 +72,24 @@ pipeline {
             }
             steps {
                 script {
-                    sshPublisher(
-                        publishers: [
-                            sshPublisherDesc(
-                                configName: 'ansible-control',
-                                verbose: false,
-                                transfers: [
-                                    sshTransfer(
-                                        execCommand: 'cd /etc/ansible && ansible-playbook -i hosts setup-prod.yml',
-                                        execTimeout: 120000,
-                                    )
-                                ]
-                            )
-                        ]
-                    )
+                    if (PRODUCTION == 'YES DEV TO PRODUCTION!' || params.RUNNOW ){
+                        sshPublisher(
+                            publishers: [
+                                sshPublisherDesc(
+                                    configName: 'ansible-control',
+                                    verbose: false,
+                                    transfers: [
+                                        sshTransfer(
+                                            execCommand: 'cd /etc/ansible && ansible-playbook -i hosts setup-prod.yml',
+                                            execTimeout: 120000,
+                                        )
+                                    ]
+                                )
+                            ]
+                        )
+                    }else {
+                        echo 'develop to production is failed. please try again!'
+                    }
                 }
             }
         }
