@@ -9,10 +9,10 @@ services:
         networks:
             - networkid
         environment:
-            - VUE_APP_URL=http://3.92.189.20/product
-            - VUE_APP_URL_HISTORY=http://3.92.189.20/history
-            - VUE_APP_URL_USERS=http://3.92.189.20/users
-            - VUE_APP_URL_AUTH=http://3.92.189.20/auth
+            - VUE_APP_URL=http://184.72.88.25/product
+            - VUE_APP_URL_HISTORY=http://184.72.88.25/history
+            - VUE_APP_URL_USERS=http://184.72.88.25/users
+            - VUE_APP_URL_AUTH=http://184.72.88.25/auth
 
     nodejs:
         container_name: nodejs
