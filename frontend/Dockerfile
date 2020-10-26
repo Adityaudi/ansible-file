@@ -19,6 +19,5 @@ COPY ssl/cert.pem /etc/ssl/certs/cert.pem
 COPY ssl/cert.key /etc/ssl/private/cert.key 
 
 COPY --from=build-stage /app/dist /dist/
-
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
