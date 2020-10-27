@@ -4,10 +4,10 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-ENV VUE_APP_URL='http://184.72.88.25/product'
-ENV VUE_APP_URL_HISTORY='http://184.72.88.25/history'
-ENV VUE_APP_URL_USERS='http://184.72.88.25/users'
-ENV VUE_APP_URL_AUTH='http://184.72.88.25/auth'
+ENV VUE_APP_URL='http://3.238.16.39:31805/product'
+ENV VUE_APP_URL_HISTORY='http://3.238.16.39:31805/history'
+ENV VUE_APP_URL_USERS='http://3.238.16.39:31805/users'
+ENV VUE_APP_URL_AUTH='http://3.238.16.39:31805/auth'
 
 RUN npm run build
 
